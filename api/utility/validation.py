@@ -51,10 +51,11 @@ class UserValidation:
 
     def get_user(current_user):
         """function returns data of the current user """
-        for user in user_db:
+        for user in user_data:
             if user['email'] == current_user:
                 return user
 
     def check_is_admin(current_user):
         """function checks if a user is an admin """
-        return current_user['isAdmin'] == True
+        if current_user["is_admin"]:
+            return True

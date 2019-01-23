@@ -6,17 +6,18 @@ user_data = []
 class User:
     """ model class for users """
 
-    def __init__(self, **kwargs):
+    def __init__(self, firstname, lastname, othernames, email, phone_number,
+                 username, password, is_admin):
         self._id = len(user_data)+1
-        self.firstname = kwargs["firstname"]
-        self.lastname = kwargs["lastname"]
-        self.othernames = kwargs["othernames"]
-        self.email = kwargs["email"]
-        self.phone_number = kwargs["phone_number"]
-        self.username = kwargs["username"]
-        self.Password = kwargs["password"]
+        self.firstname = firstname
+        self.lastname = lastname
+        self.othernames = othernames
+        self.email = email
+        self.phone_number = phone_number
+        self.username = username
+        self.password = password
         self.registered = datetime.now()
-        self.is_admin = False
+        self.is_admin = is_admin
 
     def format_user_record(self):
         """Method that returns dictionary representation of the object"""
@@ -36,5 +37,5 @@ class User:
     @staticmethod
     def check_user_exists(email):
         """method checks if a user exists in the system"""
-        for user in user_db:
+        for user in user_data:
             return user['email'] == email

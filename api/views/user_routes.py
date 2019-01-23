@@ -1,17 +1,18 @@
-from api.controllers.user_controller import login_user, signup_user
+from flask import Blueprint
+from api.controllers.user_controller import UserController
+
+u_controller = UserController()
+
+user_blueprint = Blueprint("user_blueprint", __name__)
 
 
-"""signup user route """
-
-
-@app.route('api/v1/users', methods=['POST'])
+@user_blueprint.route('/users', methods=['POST'])
 def signup():
-    return signup_user()
+    """signup user route """
+    return u_controller.signup_user()
 
 
-"""login user or admin route"""
-
-
-@app.route('api/v1/users/login', methods=['POST'])
+@user_blueprint.route('/users/login', methods=['POST'])
 def login():
-    return login_user()
+    """login user or admin route"""
+    return u_controler.login_user()
