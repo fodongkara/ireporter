@@ -15,4 +15,4 @@ def signup():
 @user_blueprint.route('/users/login', methods=['POST'])
 def login():
     """login user or admin route"""
-    return u_controler.login_user()
+    return u_controller.login_user()
