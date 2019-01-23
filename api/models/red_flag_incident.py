@@ -7,7 +7,6 @@ class Redflag:
     """ model class for red-flags """
 
     def __init__(self, **kwargs):
-        self._id = len(my_red_flags)+1
         self.createdOn = datetime.now()
         self.createdBy = kwargs["createdBy"]
         self.type = kwargs["type"]

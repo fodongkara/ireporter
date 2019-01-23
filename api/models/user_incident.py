@@ -8,7 +8,6 @@ class User:
 
     def __init__(self, firstname, lastname, othernames, email, phone_number,
                  username, password, is_admin):
-        self._id = len(user_data)+1
         self.firstname = firstname
         self.lastname = lastname
         self.othernames = othernames

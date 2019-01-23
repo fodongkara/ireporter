@@ -59,15 +59,68 @@ class DatabaseConnection:
 
     def register_user(
         self, firstname, lastname, othernames, email,
-        phone_number, username, password, is_admin
+        phone_number, username, Password, admin
     ):
         reg_user = "INSERT INTO users(\
             firstname, lastname, othernames, email,\
             phone_number, username, password,\
-            is_admin) VALUES ('{}','{}', '{}', '{}','{}','{}','{}','{}')".format(firstname, lastname, othernames, email, phone_number, username, password, is_admin)
+            is_admin) VALUES ('{}','{}', '{}', '{}','{}','{}','{}','{}')".format(firstname, lastname, othernames, email, phone_number, username, Password, admin)
         return self.cursor.execute(reg_user)
+
+    def insert_incident(self, created_by, incident_type, red_flag_status, images, red_flag_location, videos, comments):
+        insert_incident = "INSERT INTO records_table(createdBy, record_type, incident_location, Image, Videos, comment, incident_status) VALUES('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(
+        created_by, incident_type, red_flag_status, images_, red_flag_location, videos, comments)
+        self.cursor.execute(insert_incident)
+
+    def check_username(self, username):
+        query = "SELECT username FROM users WHERE username='{}'".format(
+            username)
+        self.cursor.execute(query)
+        user = self.cursor.fetchone()
+        return user
+
+    def check_email(self, email):
+        query = "SELECT email FROM users WHERE email='{}'".format(email)
+        print(query)
+        self.cursor.execute(query)
+        email = self.cursor.fetchone()
+        return email
+
+    def login_user(self, username):
+        query = "SELECT * FROM users WHERE username='{}'".format(username)
+        print(query)
+        self.cursor.execute(query)
+        user = self.cursor.fetchone()
+        return user
+        
+    def get_all_incidents(self):
+        query = "SELECT * FROM incidents WHERE incident_type='red-flag'"
+        self.cursor.execute(query)
+        incidents = self.cursor.fetchall()
+        return incidents
+
+    def get_all_interventions(self):
+        query = "SELECT * FROM incidents WHERE incident_type='intervention'"
+        self.cursor.execute(query)
+        incidents = self.cursor.fetchall()
+        return incidents
+
+    def get_one_incident(self, incident_Id):
+        query_incident = "SELECT * FROM incidents WHERE id='{}' AND incident_type='red-flag'".format(
+            incident_Id)
+        self.cursor.execute(query_incident)
+        incident = self.cursor.fetchone()
+        return incident
+
+    def get_one_intervention(self, incident_Id):
+        query_incident = "SELECT * FROM incidents WHERE id='{}' AND incident_type='intervention'".format(
+            incident_Id)
+        self.cursor.execute(query_incident)
+        incident = self.cursor.fetchone()
+        return incident
+
+
 
 
 if __name__ == '__main__':
-    db_name = DatabaseConnection()
-
+    db_name=DatabaseConnection()

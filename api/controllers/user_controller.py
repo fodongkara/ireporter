@@ -2,6 +2,9 @@ from flask import request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from api.models.user_incident import User, user_data
 from api.utility.validation import UserValidation
+from api.database.db import DatabaseConnection
+
+db_conn = DatabaseConnection()
 
 
 class UserController:
@@ -42,9 +45,15 @@ class UserController:
         if User.check_user_exists(user_email):
             return jsonify({'status': 400,
                             'error': 'User account already exists'}), 400
-        user_data.append(user.format_user_record())
-        return jsonify({'status': 201, 'data': user.format_user_record(),
-                        'message': 'Your Account was created successfuly'}), 201
+        db_conn.register_user(
+            first_name, last_name, other_names, user_email, phone_number,
+            user_name, generate_password_hash(Password), admin
+        )
+
+        return jsonify({"data": [{
+                "status": 201,
+                "message": "user created successfully",
+            }]}), 201
 
     def login_user(self):
         """Method for user login"""
@@ -65,22 +74,23 @@ class UserController:
                 'status': 400,
                 'error': 'Password must be atleast 8 characters and should have atleast one number and one capital letter'
             }), 400
-        for search_data in user_data:
-            print(search_data['email'], login_email, search_data['password'], login_password)
-            if search_data['email'] == login_email and \
-                    check_password_hash(search_data['password'],
-                                        login_password):
-                
-                # access_token = create_access_token(
-                #     identity=search_data['email'])
-                return jsonify({
-                    'status': 200,
-                    'message': 'You are now loggedin'
-                }), 200
-        return jsonify({
-            'status': 403,
-            'error': 'Wrong email or password'
-        }), 403
+        # for search_data in user_data:
+        #     print(search_data['email'], login_email,
+        #           search_data['password'], login_password)
+        #     if search_data['email'] == login_email and
+        #             check_password_hash(search_data['password'],
+        #                                 login_password):
+
+        #         # access_token = create_access_token(
+        #         #     identity=search_data['email'])
+        #         return jsonify({
+        #             'status': 200,
+        #             'message': 'You are now loggedin'
+        #         }), 200
+        # return jsonify({
+        #     'status': 403,
+        #     'error': 'Wrong email or password'
+        # }), 403
 
 
 # def create_admin():
