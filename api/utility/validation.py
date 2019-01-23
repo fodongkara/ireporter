@@ -47,7 +47,12 @@ class UserValidation:
     def validate_user_password(password):
         """method validates user's password """
         return isinstance(password, str) and len(password) >= 8 and \
-            re.search(r'[A-Z]', password) and re.search(r'[0-9]', password)
+            re.search(r'[a-zA-Z]', password) and re.search(r'[0-9]', password)
+
+    @staticmethod
+    def validate_user_email(email):
+        """method that validates user's email"""
+        return re.search(r"^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+\.[a-z]+$)", email)
 
     def get_user(current_user):
         """function returns data of the current user """

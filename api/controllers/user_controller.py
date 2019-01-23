@@ -36,9 +36,9 @@ class UserController:
             return jsonify({
                 'status': 400,
                 'error': 'Password must be atleast 8 characters and should have atleast one number and one capital letter'
-                }), 400
+            }), 400
         user = User(first_name, last_name, other_names, user_email,
-                    phone_number, user_name,generate_password_hash(Password), admin)
+                    phone_number, user_name, generate_password_hash(Password), admin)
         if User.check_user_exists(user_email):
             return jsonify({'status': 400,
                             'error': 'User account already exists'}), 400
@@ -52,33 +52,41 @@ class UserController:
         login_email = login_data.get('email')
         login_password = login_data.get('password')
         if not login_email or not login_password:
-            return jsonify({'status': 400,
-                            'error': 'No email or password have been provided'
-                            }), 400
+            return jsonify({
+                'status': 400,
+                'error': 'No email or password have been provided'
+            }), 400
 
         if not validate_email(login_email):
             return jsonify({'status': 400, 'error': 'Invalid email'}), 400
 
         if not validateUser.validate_password(login_password):
-            return jsonify({'status': 400,
-                            'error': 'Password must be atleast 8 characters and should have atleast one number and one capital letter'}), 400
-        for search_data in user_db:
+            return jsonify({
+                'status': 400,
+                'error': 'Password must be atleast 8 characters and should have atleast one number and one capital letter'
+            }), 400
+        for search_data in user_data:
             if search_data['email'] == login_email and \
-                    check_password_hash(search_data['userpassword'],
+                    check_password_hash(search_data['password'],
                                         login_password):
                 access_token = create_access_token(
                     identity=search_data['email'])
-                print(user_db)
-                return jsonify({'status': 200, 'access_token': access_token,
-                                'message': 'You are now loggedin'}), 200
-        return jsonify({'status': 403, 'error': 'Wrong email or password'}), 403
+                print(user_data)
+                return jsonify({
+                    'status': 200, 'access_token': access_token,
+                    'message': 'You are now loggedin'
+                }), 200
+        return jsonify({
+            'status': 403,
+            'error': 'Wrong email or password'
+        }), 403
 
 
 # def create_admin():
 #     admin = User('kato', 'ernest', 'henry', 'henry38ernest@gmail.com',
 #                  '0706578719', 'ernest_henry',
 #                  generate_password_hash('ernest54637'), isAdmin=True)
-#     user_db.append(admin.format_user_record())
+#     user_data.append(admin.format_user_record())
 
 
 # create_admin()
