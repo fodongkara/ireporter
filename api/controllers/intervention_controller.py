@@ -1,6 +1,12 @@
 from flask import jsonify, request
 from api.models.incident import Incident
 from api.utility.validation import ValidateRecord
+from api.database.db import DatabaseConnection
+from datetime import datetime
+from api.authentication.auth import get_current_identity, extract_token_from_header, token_required
+
+db_conn = DatabaseConnection()
+current_user = get_current_identity()
 
 
 class InterventionController():
@@ -10,16 +16,17 @@ class InterventionController():
     def create_intervention_record(self):
         data = request.get_json()
 
-        created_by = data.get("createdBy")
+        created_on = datetime.now()
+        created_by = current_user
         incident_type = data.get("type")
-        intervention_status = data.get("status")
+        status = data.get("status")
         images = data.get("Images")
-        intervention_location = data.get("location")
+        location = data.get("location")
         videos = data.get("Videos")
         comments = data.get("comment")
 
-        if not created_by or not incident_type or not intervention_location \
-                or not red_flag_status or not images \
+        if not created_by or not incident_type or not location \
+                or not status or not images \
                 or not videos or not comments:
             return jsonify({
                 "Error": "Required field is missing"
@@ -46,9 +53,8 @@ class InterventionController():
                                 place=red_flag_location, status=intervention_status,
                                 Images=images, Videos=videos, comment=comments)
 
-        my_red_flags.append(
-            red_flag.format_record()
-        )
+        db_conn.insert_incident(
+            created_on, created_by, incident_type, status, images, location, videos, comments)
 
         if len(my_red_flags) == 0:
             return jsonify({

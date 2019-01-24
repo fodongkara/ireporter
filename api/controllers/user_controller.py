@@ -1,7 +1,7 @@
 from flask import request, jsonify
 from api.authentication.auth import generate_token
 from werkzeug.security import generate_password_hash, check_password_hash
-from api.models.user_incident import User, user_data
+from api.models.user_incident import User
 from api.utility.validation import UserValidation
 from api.database.db import DatabaseConnection
 from datetime import datetime, timedelta

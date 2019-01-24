@@ -66,7 +66,7 @@ def token_required(func):
             }), 401
         except jwt.InvalidTokenError:
             response = jsonify({
-                "error": "Invalid token",
+                "erhror": "Invalid token",
                 "status": 401
             }), 401
         return response
@@ -75,7 +75,7 @@ def token_required(func):
 
 def get_current_identity():
     """Get user_id from the token"""
-    return decoded_token(extract_token_from_header())["uid"]
+    return decode_token(extract_token_from_header())["uid"]
 
 
 def non_admin(func):

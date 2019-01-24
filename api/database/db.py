@@ -67,9 +67,9 @@ class DatabaseConnection:
             registered,is_admin) VALUES ('{}','{}', '{}', '{}','{}','{}','{}','{}', '{}')".format(firstname, lastname, othernames, email, phone_number, username, Password, registered, admin)
         return self.cursor.execute(reg_user)
 
-    def insert_incident(self, created_by, incident_type, red_flag_status, images, red_flag_location, videos, comments):
-        insert_incident = "INSERT INTO records_table(createdBy, record_type, incident_location, Image, Videos, comment, incident_status) VALUES('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(
-            created_by, incident_type, red_flag_status, images_, red_flag_location, videos, comments)
+    def insert_incident(self, created_by, incident_type, status, images, location, videos, comments):
+        insert_incident = "INSERT INTO records_table(createdOn,createdBy, record_type, incident_location, Image, Videos, comment, incident_status) VALUES('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(
+            created_by, incident_type, status, images_, location, videos, comments)
         self.cursor.execute(insert_incident)
 
     def email_dup(self, email):
@@ -94,7 +94,7 @@ class DatabaseConnection:
         return user
 
     def get_all_incidents(self):
-        query = "SELECT * FROM records_table WHERE record_type='red_flag'"
+        query = "SELECT * FROM records_table WHERE record_type='redflag'"
         self.cursor.execute(query)
         incidents = self.cursor.fetchall()
         return incidents

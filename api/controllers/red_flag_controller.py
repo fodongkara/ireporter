@@ -18,14 +18,14 @@ class RedflagController():
 
         created_by = data.get("createdBy")
         incident_type = data.get("type")
-        red_flag_status = data.get("status")
+        status = data.get("status")
         images = data.get("Images")
-        red_flag_location = data.get("location")
+        location = data.get("location")
         videos = data.get("Videos")
         comments = data.get("comment")
 
-        if not created_by or not incident_type or not red_flag_location \
-                or not red_flag_status or not images \
+        if not created_by or not incident_type or not location \
+                or not status or not images \
                 or not videos or not comments:
             return jsonify({
                 "Error": "Required field is missing"
@@ -56,9 +56,9 @@ class RedflagController():
                             'error': 'Location field only takes in a list of valid Lat and Long cordinates'
                             }), 400
 
-        red_flag = Redflag(createdBy=created_by, type=incident_type,
-                           place=red_flag_location, status=red_flag_status,
-                           Images=images, Videos=videos, comment=comments)
+        red_flag = Incident(createdBy=created_by, type=incident_type,
+                            place=red_flag_location, status=red_flag_status,
+                            Images=images, Videos=videos, comment=comments)
 
         my_red_flags.append(
             red_flag.format_record()
