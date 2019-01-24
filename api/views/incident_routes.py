@@ -1,11 +1,13 @@
-from functools import wraps
 from flask import Flask, jsonify, request, Blueprint
 from api.controllers.red_flag_controller import RedflagController
 from api.controllers.intervention_controller import InterventionController
-
+from api.authentication.auth import token_required
+from api.controllers.intervention_controller import InterventionController
 
 inc_controller = RedflagController()
+int_controller = InterventionController()
 incident_blueprint = Blueprint("incident_blueprint", __name__)
+
 
 @incident_blueprint.route("/")
 def home():
@@ -13,11 +15,11 @@ def home():
     return inc_controller.home()
 
 
-@incident_blueprint.route("/red-flags", methods=["POST"])
+@incident_blueprint.route("/intervention", methods=["POST"])
 @token_required
-def create_redflag():
+def create_intervention_record():
     """API end point to create a red-flag record"""
-    return inc_controller.create_redflag()
+    return int_controller.create_intervention_record()
 
 
 @incident_blueprint.route("/red-flags", methods=["GET"])

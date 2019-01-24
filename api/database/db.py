@@ -68,8 +68,8 @@ class DatabaseConnection:
         return self.cursor.execute(reg_user)
 
     def insert_incident(self, created_by, incident_type, status, images, location, videos, comments):
-        insert_incident = "INSERT INTO records_table(createdOn,createdBy, record_type, incident_location, Image, Videos, comment, incident_status) VALUES('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(
-            created_by, incident_type, status, images_, location, videos, comments)
+        insert_incident = "INSERT INTO records_table(createdOn, createdBy, record_type, incident_location, Image, Videos, comment, incident_status) VALUES('{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(
+            created_by, incident_type, status, images, location, videos, comments)
         self.cursor.execute(insert_incident)
 
     def email_dup(self, email):

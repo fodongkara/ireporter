@@ -24,7 +24,6 @@ def generate_token(user_id):
         return str(e)
 
 
-@staticmethod
 def decode_token(token):
     """Decodes the access token from the Authorization header."""
     try:

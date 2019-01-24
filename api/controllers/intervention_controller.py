@@ -6,7 +6,6 @@ from datetime import datetime
 from api.authentication.auth import get_current_identity, extract_token_from_header, token_required
 
 db_conn = DatabaseConnection()
-current_user = get_current_identity()
 
 
 class InterventionController():
@@ -16,55 +15,47 @@ class InterventionController():
     def create_intervention_record(self):
         data = request.get_json()
 
-        created_on = datetime.now()
-        created_by = current_user
+        created_by = data.get("createdBy")
         incident_type = data.get("type")
-        status = data.get("status")
+        status = data.get("incident_status")
         images = data.get("Images")
-        location = data.get("location")
+        location = data.get("incident_location")
         videos = data.get("Videos")
         comments = data.get("comment")
 
-        if not created_by or not incident_type or not location \
-                or not status or not images \
-                or not videos or not comments:
-            return jsonify({
-                "Error": "Required field is missing"
-            }), 400
+        # if not created_by or not created_on or not incident_type or not location \
+        #         or not status or not images \
+        #         or not videos or not comments:
+        #     return jsonify({
+        #         "Message": "Insert required fields"
+        #     }), 400
 
-        if not ValidateRecord.validate_type(incident_type):
-            return jsonify({'status': 400,
-                            'Error': 'type must a string and must be a red-flag'
-                            }), 400
-        if not ValidateRecord.validate_comment(comments):
-            return jsonify({'status': 400,
-                            'error': 'comment must be a string'}), 400
+        # if not ValidateRecord.validate_type(incident_type):
+        #     return jsonify({'status': 400,
+        #                     'Error': 'type must a string and must be a red-flag'
+        #                     }), 400
+        # if not ValidateRecord.validate_comment(comments):
+        #     return jsonify({'status': 400,
+        #                     'error': 'comment must be a string'}), 400
 
-        if not ValidateRecord.validate_status(red_flag_status):
-            return jsonify({'status': 400,
-                            'error': "Status must either be resolved, rejected or under investigation"
-                            }), 400
-        if not ValidateRecord.validate_location(red_flag_location):
-            return jsonify({'status': 400,
-                            'error': 'Location field only takes in a list of valid Lat and Long cordinates'
-                            }), 400
+        # if not ValidateRecord.validate_status(status):
+        #     return jsonify({'status': 400,
+        #                     'error': "Status must either be resolved, rejected or under investigation"
+        #                     }), 400
+        # if not ValidateRecord.validate_location(red_flag_location):
+        #     return jsonify({'status': 400,
+        #                     'error': 'Location field only takes in a list of valid Lat and Long cordinates'
+        #                     }), 400
 
         intervention = Incident(createdBy=created_by, type=incident_type,
-                                place=red_flag_location, status=intervention_status,
+                                incident_location=location, incident_status=status,
                                 Images=images, Videos=videos, comment=comments)
 
         db_conn.insert_incident(
-            created_on, created_by, incident_type, status, images, location, videos, comments)
-
-        if len(my_red_flags) == 0:
-            return jsonify({
-                "status": 400,
-                "Error": "Invalid request"
-            }), 400
+            created_by, incident_type, status, images, location, videos, comments)
         return jsonify({
-            "data": red_flag.format_record(),
             "status": 201,
-            "Message": "Created red-flag record"
+            "Message": "Created record"
         }), 201
 
     def get_all_intervention_records(self):

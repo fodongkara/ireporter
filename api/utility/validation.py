@@ -9,7 +9,7 @@ class ValidateRecord():
     @staticmethod
     def validate_type(record_type):
         """method validates the type of red-flag record"""
-        return isinstance(record_type, str) and record_type == "red-flag" or record_type == "intervention"
+        return isinstance(record_type, str) and record_type == "intervention" or record_type == "red-flag"
 
     @staticmethod
     def validate_comment(comment):
