@@ -1,43 +1,29 @@
 from flask import jsonify, request
-from api.models.red_flag_incident import Redflag, my_red_flags
+from api.models.incident import Incident
 from api.utility.validation import ValidateRecord
 
 
-class IncidentController():
+class InterventionController():
     def __init__(self):
         pass
 
-    def home(self):
-        return jsonify({
-            'message': 'Welcome to ernest\'s iReporter app.',
-            'status': '200'
-        }), 200
-
-    def create_redflag(self):
+    def create_intervention_record(self):
         data = request.get_json()
 
         created_by = data.get("createdBy")
         incident_type = data.get("type")
-        red_flag_status = data.get("status")
+        intervention_status = data.get("status")
         images = data.get("Images")
-        red_flag_location = data.get("location")
+        intervention_location = data.get("location")
         videos = data.get("Videos")
         comments = data.get("comment")
 
-        if not created_by or not incident_type or not red_flag_location \
+        if not created_by or not incident_type or not intervention_location \
                 or not red_flag_status or not images \
                 or not videos or not comments:
             return jsonify({
                 "Error": "Required field is missing"
             }), 400
-
-        for comment in my_red_flags:
-            if comment["comment"] == comments:
-                return jsonify({
-                    "Error": "Redflag record exists",
-                    "status": 400
-
-                }), 400
 
         if not ValidateRecord.validate_type(incident_type):
             return jsonify({'status': 400,
@@ -56,9 +42,9 @@ class IncidentController():
                             'error': 'Location field only takes in a list of valid Lat and Long cordinates'
                             }), 400
 
-        red_flag = Redflag(createdBy=created_by, type=incident_type,
-                           place=red_flag_location, status=red_flag_status,
-                           Images=images, Videos=videos, comment=comments)
+        intervention = Incident(createdBy=created_by, type=incident_type,
+                                place=red_flag_location, status=intervention_status,
+                                Images=images, Videos=videos, comment=comments)
 
         my_red_flags.append(
             red_flag.format_record()
@@ -75,7 +61,7 @@ class IncidentController():
             "Message": "Created red-flag record"
         }), 201
 
-    def get_all_red_flags(self):
+    def get_all_intervention_records(self):
         if len(my_red_flags) > 0:
             return jsonify({
                 "status": 200,
@@ -86,7 +72,7 @@ class IncidentController():
             "Error": "There are no records"
         })
 
-    def get_a_redflag(self, flag_id):
+    def get_an_intervention_record(self, flag_id):
         red_flag_record = [
             red_flag for red_flag in my_red_flags if red_flag['id'] == flag_id]
         if red_flag_record:
@@ -112,7 +98,7 @@ class IncidentController():
             'Result': "record was deleted successfully"
         }), 200
 
-    def edit_red_flag_location(self, flag_id):
+    def edit_intervention_location(self, flag_id):
         data = request.get_json()
         for red_flag_record in my_red_flags:
             if red_flag_record['id'] == flag_id:
@@ -128,7 +114,7 @@ class IncidentController():
                     "Error": "Red flag is not available"
                 }), 400
 
-    def edit_red_flag_comment(self, flag_id):
+    def edit_intervention_comment(self, flag_id):
         data = request.get_json()
         for red_flag_record in my_red_flags:
             if red_flag_record['id'] == flag_id:

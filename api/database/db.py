@@ -25,7 +25,7 @@ class DatabaseConnection:
     def create_tables(self):
 
         create_tables = (
-        """
+            """
             CREATE TABLE IF NOT EXISTS users (
                 userId SERIAL NOT NULL PRIMARY KEY,
                 firstname VARCHAR NOT NULL,
@@ -35,12 +35,12 @@ class DatabaseConnection:
                 phone_number VARCHAR NOT NULL,
                 username VARCHAR NOT NULL,
                 password VARCHAR NOT NULL,
-                registered TIMESTAMP,
+                registered VARCHAR NOT NULL,
                 is_admin BOOLEAN
             );
         """,
 
-        """
+            """
             CREATE TABLE IF NOT EXISTS records_table(
                 incident_id SERIAL PRIMARY KEY,
                 createdOn TEXT NOT NULL,
@@ -59,18 +59,26 @@ class DatabaseConnection:
 
     def register_user(
         self, firstname, lastname, othernames, email,
-        phone_number, username, Password, admin
+        phone_number, username, registered, Password, admin
     ):
         reg_user = "INSERT INTO users(\
             firstname, lastname, othernames, email,\
             phone_number, username, password,\
-            is_admin) VALUES ('{}','{}', '{}', '{}','{}','{}','{}','{}')".format(firstname, lastname, othernames, email, phone_number, username, Password, admin)
+            registered,is_admin) VALUES ('{}','{}', '{}', '{}','{}','{}','{}','{}', '{}')".format(firstname, lastname, othernames, email, phone_number, username, Password, registered, admin)
         return self.cursor.execute(reg_user)
 
     def insert_incident(self, created_by, incident_type, red_flag_status, images, red_flag_location, videos, comments):
         insert_incident = "INSERT INTO records_table(createdBy, record_type, incident_location, Image, Videos, comment, incident_status) VALUES('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(
-        created_by, incident_type, red_flag_status, images_, red_flag_location, videos, comments)
+            created_by, incident_type, red_flag_status, images_, red_flag_location, videos, comments)
         self.cursor.execute(insert_incident)
+
+    def email_dup(self, email):
+        query = "SELECT * FROM users WHERE email = '{}'".format(email)
+        self.cursor.execute(query)
+        user = self.cursor.fetchone()
+        if user:
+            return True
+        return False
 
     def check_username(self, username):
         query = "SELECT username FROM users WHERE username='{}'".format(
@@ -79,48 +87,51 @@ class DatabaseConnection:
         user = self.cursor.fetchone()
         return user
 
-    def check_email(self, email):
-        query = "SELECT email FROM users WHERE email='{}'".format(email)
-        print(query)
-        self.cursor.execute(query)
-        email = self.cursor.fetchone()
-        return email
-
-    def login_user(self, username):
-        query = "SELECT * FROM users WHERE username='{}'".format(username)
-        print(query)
+    def login_user(self, email):
+        query = "SELECT * FROM users WHERE email='{}'".format(email)
         self.cursor.execute(query)
         user = self.cursor.fetchone()
         return user
-        
+
     def get_all_incidents(self):
-        query = "SELECT * FROM incidents WHERE incident_type='red-flag'"
+        query = "SELECT * FROM records_table WHERE record_type='red_flag'"
         self.cursor.execute(query)
         incidents = self.cursor.fetchall()
         return incidents
 
     def get_all_interventions(self):
-        query = "SELECT * FROM incidents WHERE incident_type='intervention'"
+        query = "SELECT * FROM records WHERE record_type='intervention'"
         self.cursor.execute(query)
         incidents = self.cursor.fetchall()
         return incidents
 
     def get_one_incident(self, incident_Id):
-        query_incident = "SELECT * FROM incidents WHERE id='{}' AND incident_type='red-flag'".format(
+        query_incident = "SELECT * FROM records_table WHERE id='{}' AND record_type='red-flag'".format(
             incident_Id)
         self.cursor.execute(query_incident)
         incident = self.cursor.fetchone()
         return incident
 
     def get_one_intervention(self, incident_Id):
-        query_incident = "SELECT * FROM incidents WHERE id='{}' AND incident_type='intervention'".format(
+        query_incident = "SELECT * FROM records_table WHERE id='{}' AND record_type='intervention'".format(
             incident_Id)
         self.cursor.execute(query_incident)
         incident = self.cursor.fetchone()
         return incident
 
+    def update_incident_record(self, field_to_update, incident_id_in,
+                               input_data):
+        sql = ("""UPDATE incident_table SET {} = '{}' WHERE incidentid = '{}'"""
+               .format(field_to_update, input_data, incident_id_in))
+        return self.cursor.execute(sql)
 
+    def delete_incident_record(self, incident_id):
+        sql = ("""DELETE from incident_table WHERE incidentid = '{}' """
+               .format(incident_id))
+        return self.cursor.execute(sql)
 
-
-if __name__ == '__main__':
-    db_name=DatabaseConnection()
+    def drop_tables(self):
+        command = ("""DROP TABLE user_table """,
+                   """DROP TABLE incident_table  """)
+        for comm in command:
+            self.cursor.execute(comm)

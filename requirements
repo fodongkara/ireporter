@@ -26,7 +26,6 @@ pycodestyle==2.4.0
 PyJWT==1.7.1
 pylint==2.2.2
 pytest==4.1.1
-pytest-cov==2.6.1
 requests==2.21.0
 six==1.12.0
 typed-ast==1.2.0

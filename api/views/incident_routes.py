@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, Blueprint
 from api.controllers.incident_controller import IncidentController
+from api.controllers.intervention_controller import InterventionController
 
 inc_controller = IncidentController()
 red_flag_blueprint = Blueprint("red_flag_blueprint", __name__)
