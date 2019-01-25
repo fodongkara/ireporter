@@ -1,5 +1,4 @@
 import re
-from api.models.user_incident import user_data
 
 
 class ValidateRecord():
@@ -10,7 +9,7 @@ class ValidateRecord():
     @staticmethod
     def validate_type(record_type):
         """method validates the type of red-flag record"""
-        return isinstance(record_type, str) and record_type == "red-flag"
+        return isinstance(record_type, str) and record_type == "intervention" or record_type == "red-flag"
 
     @staticmethod
     def validate_comment(comment):
@@ -20,15 +19,12 @@ class ValidateRecord():
     @staticmethod
     def validate_status(status):
         """method validates the status of an red-flag record"""
-        return isinstance(status, str) and status == \
-            'under investigation' or status == 'rejected' or \
-            status == 'resolved'
+        return isinstance(status, str) and status == 'under investigation' or status == 'rejected' or status == 'resolved'
 
     @staticmethod
     def validate_location(location):
         """method validates the location of an incident record"""
-        return isinstance(location, list) and len(location) == 2 \
-            and isinstance(location[0], float) and isinstance(location[1], float)
+        return isinstance(location, list) and len(location) == 2 and isinstance(location[0], float) and isinstance(location[1], float)
 
 
 class UserValidation:
@@ -46,8 +42,7 @@ class UserValidation:
     @staticmethod
     def validate_user_password(password):
         """method validates user's password """
-        return isinstance(password, str) and len(password) >= 8 and \
-            re.search(r'[a-zA-Z]', password) and re.search(r'[0-9]', password)
+        return isinstance(password, str) and len(password) >= 8 and re.search(r'[a-zA-Z]', password) and re.search(r'[0-9]', password)
 
     @staticmethod
     def validate_user_email(email):

@@ -3,6 +3,16 @@ language: python
 python: 
 - "3.5"
 
+env:
+  global:
+    -ENVIRONMENT ='testing_env'
+
+services:
+-postgres
+
+before_script:
+-"psql -c 'create database record_db;' -U postgres"
+
 script: 
 - python -m pytest --cov
 
