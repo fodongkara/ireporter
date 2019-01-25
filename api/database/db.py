@@ -64,7 +64,7 @@ class DatabaseConnection:
         reg_user = "INSERT INTO users(\
             firstname, lastname, othernames, email,\
             phone_number, username, password,\
-            registered,is_admin) VALUES ('{}','{}', '{}', '{}','{}','{}','{}','{}', '{}')".format(firstname, lastname, othernames, email, phone_number, username, Password, registered, admin)
+            registered,is_admin) VALUES ('{}','{}', '{}', '{}','{}','{}','{}','{}', '{}')RETURNING *".format(firstname, lastname, othernames, email, phone_number, username, Password, registered, admin)
         return self.cursor.execute(reg_user)
 
     def insert_incident(self, created_by, incident_type, status, images, location, videos, comments):
@@ -118,4 +118,3 @@ class DatabaseConnection:
         self.cursor.execute(query_incident)
         incident = self.cursor.fetchone()
         return incident
-
