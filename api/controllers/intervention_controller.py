@@ -23,7 +23,7 @@ class InterventionController():
         videos = data.get("Videos")
         comments = data.get("comment")
 
-        # if not created_by or not created_on or not incident_type or not location \
+        # if not created_by  or not incident_type or not location \
         #         or not status or not images \
         #         or not videos or not comments:
         #     return jsonify({

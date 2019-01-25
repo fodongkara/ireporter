@@ -68,7 +68,7 @@ class DatabaseConnection:
         return self.cursor.execute(reg_user)
 
     def insert_incident(self, created_by, incident_type, status, images, location, videos, comments):
-        insert_incident = "INSERT INTO records_table(createdOn, createdBy, record_type, incident_location, Image, Videos, comment, incident_status) VALUES('{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(
+        insert_incident = "INSERT INTO records_table(createdBy, record_type, incident_location, Image, Videos, comment, incident_status) VALUES('{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(
             created_by, incident_type, status, images, location, videos, comments)
         self.cursor.execute(insert_incident)
 
@@ -119,19 +119,3 @@ class DatabaseConnection:
         incident = self.cursor.fetchone()
         return incident
 
-    def update_incident_record(self, field_to_update, incident_id_in,
-                               input_data):
-        sql = ("""UPDATE incident_table SET {} = '{}' WHERE incidentid = '{}'"""
-               .format(field_to_update, input_data, incident_id_in))
-        return self.cursor.execute(sql)
-
-    def delete_incident_record(self, incident_id):
-        sql = ("""DELETE from incident_table WHERE incidentid = '{}' """
-               .format(incident_id))
-        return self.cursor.execute(sql)
-
-    def drop_tables(self):
-        command = ("""DROP TABLE user_table """,
-                   """DROP TABLE incident_table  """)
-        for comm in command:
-            self.cursor.execute(comm)
