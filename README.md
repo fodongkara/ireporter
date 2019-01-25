@@ -3,7 +3,7 @@
 Corruption is a huge bane to Africa’s development. African countries must develop novel and localised solutions that will curb this menace, hence the birth of iReporter. iReporter enables any/every citizen to bring any form of corruption to the notice of appropriate authorities and the general public. Users can also report on things that needs government intervention. iReporter is an App that is aimed at solving this.
 
 
-This repository contains my code for the Andela iReporter Challenge 2.
+This repository contains my code for the Andela iReporter Challenge .
 
 ## Languages and Tools Used
 
@@ -63,21 +63,21 @@ pytest
 
 |REQUEST TYPE| URL | DESCRIPTION |
 |------------|-----|-------------|
-|POST| /api/v1/red-flags/create |Create a red flag record|
-|GET| /api/v1/red-flags |Get all red flag records |
-|GET| /api/v1/red-flags/<int:flag_id> |Get specific red flag record|
-|DELETE| /api/v1/red-flags/<int:flag_id>|Delete a specific red flag record|
-|PATCH| /api/v1/red-flags/<int:flag_id>/comment |Update comment of a specific red flag record|
-|PATCH| /api/v1/red-flags/<int:flag_id>/location |Update location of a specific red flag record|
+|POST| /api/v1/intervention/create |Create an intervention record|
+|GET| /api/v1/intervention |Get all intervention records records |
+|GET| /api/v1/intervention/<int:flag_id> |Get specific intervention record|
+|DELETE| /api/v1/intervention/<int:flag_id>|Delete a specific intervention record|
+|PATCH| /api/v1/intervention/<int:flag_id>/comment |Update comment of a specific intervention record|
+|PATCH| /api/v1/intervention/<int:flag_id>/location |Update location of a specific intervention record|
 
 
 ## Author of the codebase
 
-##### Kato Ernest Henry 
+#### Kato Ernest Henry 
 
 
 ## Deployment
 
 Application is deployed using Heroku.
 
-checkout it on [HEROKU](https://ireporter-api-ernest.herokuapp.com/)
+checkout it on [HEROKU](https://ireporterapi-challenge3.herokuapp.com/)
