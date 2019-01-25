@@ -22,7 +22,7 @@ This repository contains my code for the Andela iReporter Challenge 3.
 ### Clone the project
 
 ```
-git clone https://github.com/ernesthenry/iReporterAPI.git
+git clone https://github.com/ernesthenry/iReporter-Challenge3.git
 ```
 
 ## Installation
