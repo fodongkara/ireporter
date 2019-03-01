@@ -1,16 +1,32 @@
 import psycopg2
+import os
 import psycopg2.extras
 from pprint import pprint
+from config import runtime_mode
 
 
 class DatabaseConnection:
     def __init__(self):
 
-        self.db_name = 'records_db'
+        self.db_name = ""
+        self.db_connect = None
 
         try:
-            self.connection = psycopg2.connect(dbname=self.db_name, user="postgres",
-                                               host="localhost", password="andela2018", port=5432)
+            if runtime_mode == "development":
+                self.db_name = "records_db"
+                self.connection = psycopg2.connect(dbname=self.db_name, user="postgres",
+                                                   host="localhost", password="andela2018", port=5432)
+
+            if runtime_mode == "testing":
+                self.db_name = "testing_db"
+                self.connection = psycopg2.connect(dbname=self.db_name, user="postgres",
+                                                   host="localhost", password="andela2018", port=5432)
+
+            if runtime_mode == "production":
+                DATABASE_URL = os.environ['DATABASE_URL']
+                self.connection = psycopg2.connect(
+                    DATABASE_URL, sslmode='require')
+
             self.connection.autocommit = True
             self.cursor = self.connection.cursor(
                 cursor_factory=psycopg2.extras.RealDictCursor)
