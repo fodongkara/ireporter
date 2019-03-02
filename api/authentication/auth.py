@@ -6,14 +6,14 @@ from flask import request, jsonify
 SECRET_KEY = "fdfdwdcvb"
 
 
-def generate_token(user_id,is_admin):
+def generate_token(user_id, is_admin):
     try:
         # set up a payload with an expiration time
         payload = {
-            'exp': datetime.utcnow() + timedelta(minutes=60),
+            'exp': datetime.utcnow() + timedelta(minutes=2),
             'iat': datetime.utcnow(),
             'uid': user_id,
-            'is_admin':is_admin
+            'is_admin': is_admin
         }
         # create the byte string token using the payload and the SECRET key
         jwt_string = jwt.encode(payload, SECRET_KEY,
@@ -42,34 +42,33 @@ def decode_token(token):
 
 def extract_token_from_header():
     """Get token fromm the headers"""
-    authorization_header = request.headers.get("Authorization")
-    if not authorization_header or "Bearer" not in authorization_header:
-        return jsonify({
-            "error": "Bad authorization header",
-            "status": 400
-        })
-    token = authorization_header.split(" ")[1]
-    return token
+    if 'Authorization' in request.headers:
+        authorization_header = request.headers.get('Authorization')
+        token = authorization_header.split(" ")[1]
+        return token
 
 
 def token_required(func):
-    """Only requests with Authorization headers required"""
     @wraps(func)
     def wrapper(*args, **kwargs):
         response = None
         try:
-            extract_token_from_header()
-            response = func(*args, **kwargs)
+            if 'Authorization' not in request.headers:
+                return jsonify({
+                    "error": "Missing authorization header",
+                    "status": 400
+                })
         except jwt.ExpiredSignatureError:
-            response = jsonify({
-                "error": "Your token expired",
-                "status": 401
-            }), 401
+            response = (
+                jsonify(
+                    {"error": "Invalid Token, verification failed", "status": 401}),
+                401,
+            )
         except jwt.InvalidTokenError:
-            response = jsonify({
-                "erhror": "Invalid token",
-                "status": 401
-            }), 401
+            response = (
+                jsonify({"error": "invalid token message", "status": 401}),
+                401,
+            )
         return response
     return wrapper
 
@@ -77,6 +76,7 @@ def token_required(func):
 def get_current_identity():
     """Get user_id from the token"""
     return decode_token(extract_token_from_header())["uid"]
+
 
 def get_current_role():
     """Get user_id from the token"""
@@ -94,4 +94,3 @@ def admin_required(func):
             }), 403
         return func(*args, **kwargs)
     return wrapper
-

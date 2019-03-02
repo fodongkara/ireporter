@@ -3,6 +3,7 @@ from api.controllers.red_flag_controller import RedflagController
 from api.controllers.intervention_controller import InterventionController
 from api.authentication.auth import token_required, admin_required
 from api.controllers.intervention_controller import InterventionController
+from functools import wraps
 
 inc_controller = RedflagController()
 int_controller = InterventionController()
