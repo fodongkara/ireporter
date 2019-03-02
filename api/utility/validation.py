@@ -9,22 +9,32 @@ class ValidateRecord():
     @staticmethod
     def validate_type(record_type):
         """method validates the type of red-flag record"""
-        return isinstance(record_type, str) and record_type == "intervention" or record_type == "red-flag"
+        return isinstance(record_type, str) and  record_type !="" and record_type in ['intervention','red-flag'] 
 
     @staticmethod
     def validate_comment(comment):
         """method validates the comment of a red-flag record"""
-        return isinstance(comment, str)
+        return isinstance(comment, str) and comment != ""
 
     @staticmethod
     def validate_status(status):
         """method validates the status of an red-flag record"""
-        return isinstance(status, str) and status == 'under investigation' or status == 'rejected' or status == 'resolved'
-
+        return isinstance(status, str) and status =="draft"
     @staticmethod
     def validate_location(location):
         """method validates the location of an incident record"""
         return isinstance(location, list) and len(location) == 2 and isinstance(location[0], float) and isinstance(location[1], float)
+
+    @staticmethod
+    def validate_images(images):
+        """method validates images of an incident record"""
+        return isinstance(images, str) and images !=""
+
+    @staticmethod
+    def validate_videos(videos):
+        """method validates videos of an incident record"""
+        return isinstance(videos, str) and videos !=""
+
 
 
 class UserValidation:
@@ -32,22 +42,22 @@ class UserValidation:
     @staticmethod
     def validate_user_name(name):
         """method validates user name """
-        return isinstance(name, str) and not re.search(r'[\s]', name)
+        return isinstance(name, str) and name != "" and not re.search(r'[\s]', name)
 
     @staticmethod
-    def validate_phone_number(number):
+    def validate_phone_number(phone_number):
         """method validates user's phone number """
-        return isinstance(number, int)
+        return isinstance(phone_number, int) and phone_number != ""
 
     @staticmethod
     def validate_user_password(password):
         """method validates user's password """
-        return isinstance(password, str) and len(password) >= 8 and re.search(r'[a-zA-Z]', password) and re.search(r'[0-9]', password)
+        return isinstance(password, str) and len(password) >= 5 and password != "" and re.search(r'[a-zA-Z]', password) and re.search(r'[0-9]', password)
 
     @staticmethod
     def validate_user_email(email):
         """method that validates user's email"""
-        return re.search(r"^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+\.[a-z]+$)", email)
+        return re.match(r"[^@]+@[^@]+\.[^@]+", email) and email != ""
 
     def get_user(current_user):
         """function returns data of the current user """

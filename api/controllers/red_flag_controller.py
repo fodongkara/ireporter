@@ -16,12 +16,12 @@ class RedflagController():
     def create_redflag(self):
         data = request.get_json()
 
-        created_by = data.get("createdBy")
-        incident_type = data.get("type")
+        created_by = data.get("created_by")
+        incident_type = data.get("incident_type")
         status = data.get("status")
-        images = data.get("Images")
+        images = data.get("images")
         location = data.get("location")
-        videos = data.get("Videos")
+        videos = data.get("videos")
         comments = data.get("comment")
 
         if not created_by or not incident_type or not location \
@@ -87,6 +87,7 @@ class RedflagController():
         })
 
     def get_a_redflag(self, flag_id):
+        my_red_flags =[]
         red_flag_record = [
             red_flag for red_flag in my_red_flags if red_flag['id'] == flag_id]
         if red_flag_record:
@@ -143,3 +144,4 @@ class RedflagController():
                     "status": "400",
                     "Error": "Red flag is not available"
                 })
+

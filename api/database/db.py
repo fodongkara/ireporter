@@ -10,7 +10,7 @@ class DatabaseConnection:
 
         try:
             self.connection = psycopg2.connect(dbname=self.db_name, user="postgres",
-                                               host="localhost", password="andela2018", port=5432)
+                                               host="localhost", password="james", port=5432)
             self.connection.autocommit = True
             self.cursor = self.connection.cursor(
                 cursor_factory=psycopg2.extras.RealDictCursor)
@@ -43,14 +43,14 @@ class DatabaseConnection:
             """
             CREATE TABLE IF NOT EXISTS records_table(
                 incident_id SERIAL PRIMARY KEY,
-                createdOn TEXT NOT NULL,
+                createdOn TIMESTAMPTZ DEFAULT NOW(),
                 createdBy VARCHAR(50) NOT NULL,
                 record_type VARCHAR(50) NOT NULL,
                 incident_location TEXT NOT NULL,
                 Image VARCHAR(50) NOT NULL,
                 Videos VARCHAR(50) NOT NULL,
                 comment TEXT NOT NULL,
-                incident_status VARCHAR(50) NOT NULL
+                incident_status VARCHAR(5) NOT  NULL
             );
         """
         )
@@ -67,9 +67,9 @@ class DatabaseConnection:
             registered,is_admin) VALUES ('{}','{}', '{}', '{}','{}','{}','{}','{}', '{}')RETURNING *".format(firstname, lastname, othernames, email, phone_number, username, Password, registered, admin)
         return self.cursor.execute(reg_user)
 
-    def insert_incident(self, created_by, incident_type, status, images, location, videos, comments):
-        insert_incident = "INSERT INTO records_table(createdBy, record_type, incident_location, Image, Videos, comment, incident_status) VALUES('{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(
-            created_by, incident_type, status, images, location, videos, comments)
+    def insert_incident(self, created_by, incident_type, incident_status, images, location, videos, comments):
+        insert_incident = "INSERT INTO records_table(createdby, record_type, incident_status, incident_location, image, videos,comment) VALUES('{}', '{}','{}', '{}','{}', '{}', '{}')".format(
+            created_by, incident_type, incident_status, images, location, videos, comments)
         self.cursor.execute(insert_incident)
 
     def email_dup(self, email):
