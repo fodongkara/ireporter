@@ -15,37 +15,50 @@ class InterventionController():
     def create_intervention_record(self):
         data = request.get_json()
 
-        created_by = data.get("createdBy")
-        incident_type = data.get("type")
-        status = data.get("incident_status")
-        images = data.get("Images")
-        location = data.get("incident_location")
-        videos = data.get("Videos")
-        comments = data.get("comment")
+        created_by = data.get("created_by")
+        incident_type = data.get("incident_type")
+        status = data.get("status")
+        images = data.get("images")
+        location = data.get("location")
+        videos = data.get("videos")
+        comments = data.get("comments")
+        
 
-        # if not created_by  or not incident_type or not location \
-        #         or not status or not images \
-        #         or not videos or not comments:
-        #     return jsonify({
-        #         "Message": "Insert required fields"
-        #     }), 400
+        if not created_by  or not incident_type or not location \
+                 or not images or not status \
+                or not videos or not comments:
+            return jsonify({
+                "Message": "Please fill all the required fields"
+            }), 400
 
-        # if not ValidateRecord.validate_type(incident_type):
-        #     return jsonify({'status': 400,
-        #                     'Error': 'type must a string and must be a red-flag'
-        #                     }), 400
-        # if not ValidateRecord.validate_comment(comments):
-        #     return jsonify({'status': 400,
-        #                     'error': 'comment must be a string'}), 400
+        if not ValidateRecord.validate_type(incident_type):
+            return jsonify({'status': 400,
+                            'Error': 'Record type must be a red-flag or an intervention'
+                            }), 400
+        if not ValidateRecord.validate_comment(comments):
+            return jsonify({'status': 400,
+                            'error': 'comment must be a string'}), 400
 
-        # if not ValidateRecord.validate_status(status):
-        #     return jsonify({'status': 400,
-        #                     'error': "Status must either be resolved, rejected or under investigation"
-        #                     }), 400
-        # if not ValidateRecord.validate_location(red_flag_location):
-        #     return jsonify({'status': 400,
-        #                     'error': 'Location field only takes in a list of valid Lat and Long cordinates'
-        #                     }), 400
+        if not ValidateRecord.validate_status(status):
+            return jsonify({'status': 400,
+                            'error': "Status must draft i.e. 'status':'draft'"
+                            }), 400
+        
+        if not ValidateRecord.validate_images(images):
+            return jsonify({'status': 400,
+                            'error': "Image field must not be empty"
+                            }), 400
+
+        if not ValidateRecord.validate_images(images):
+            return jsonify({'status': 400,
+                            'error': "Image field must not be empty"
+                            }), 400
+
+
+        if not ValidateRecord.validate_location(location):
+            return jsonify({'status': 400,
+                            'error': 'Location field only takes in a list of valid Lat and Long cordinates-->[2,0.9]'
+                            }), 400
 
         intervention = Incident(createdBy=created_by, type=incident_type,
                                 incident_location=location, incident_status=status,
