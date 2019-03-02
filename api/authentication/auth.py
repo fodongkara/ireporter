@@ -6,13 +6,14 @@ from flask import request, jsonify
 SECRET_KEY = "fdfdwdcvb"
 
 
-def generate_token(user_id):
+def generate_token(user_id,is_admin):
     try:
         # set up a payload with an expiration time
         payload = {
             'exp': datetime.utcnow() + timedelta(minutes=60),
             'iat': datetime.utcnow(),
-            'uid': user_id
+            'uid': user_id,
+            'is_admin':is_admin
         }
         # create the byte string token using the payload and the SECRET key
         jwt_string = jwt.encode(payload, SECRET_KEY,
@@ -29,6 +30,7 @@ def decode_token(token):
     try:
         # try to decode the token using our SECRET variable
         payload = jwt.decode(token, SECRET_KEY)
+        print(payload)
         return payload['uid']
     except jwt.ExpiredSignatureError:
         # the token is expired, return an error string
@@ -76,18 +78,9 @@ def get_current_identity():
     """Get user_id from the token"""
     return decode_token(extract_token_from_header())["uid"]
 
-
-def non_admin(func):
-    """Restrict the admin from accessing the resource"""
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        if get_current_role():  # if admin
-            return jsonify({
-                "error": "Admin cannot access this resource",
-                "status": 403
-            }), 403
-        return func(*args, **kwargs)
-    return wrapper
+def get_current_role():
+    """Get user_id from the token"""
+    return decode_token(extract_token_from_header())["is_admin"]
 
 
 def admin_required(func):
@@ -102,15 +95,3 @@ def admin_required(func):
         return func(*args, **kwargs)
     return wrapper
 
-
-def json_data_required(func):
-    """Only requests with Content-type json will be allowed"""
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        if not request.is_json:
-            return jsonify({
-                "status": 400,
-                "error": "JSON request required"
-            }), 400
-        return func(*args, **kwargs)
-    return wrapper
