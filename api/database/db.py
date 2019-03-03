@@ -57,10 +57,8 @@ class DatabaseConnection:
         for table in create_tables:
             self.cursor.execute(table)
 
-    def register_user(
-        self, firstname, lastname, othernames, email,
-        phone_number, username, registered, Password, admin
-    ):
+    def register_user( self, firstname, lastname, othernames, email,
+                      phone_number, username, registered, Password, admin):
         reg_user = "INSERT INTO users(\
             firstname, lastname, othernames, email,\
             phone_number, username, user_password,\
@@ -69,12 +67,13 @@ class DatabaseConnection:
             lastname, othernames, email, phone_number, username, Password, registered, admin)
         return self.cursor.execute(reg_user)
 
-    def insert_incident(self, created_on, created_by, incident_type, location_lat, location_long,
-          images,videos, comments, status):
+    def insert_incident(self, created_on, created_by, incident_type, location_lat,
+                        location_long, images,videos, comments, status):
         insert_incident = "INSERT INTO records_table(createdOn, createdBy, record_type,\
         incident_location, Image, Videos, comment, incident_status) VALUES('{}',\
         '{}', '{}', ARRAY['{}', '{}'], '{}', '{}', '{}', '{}')".format(
-        created_on, created_by, incident_type, location_lat, location_long, images, videos, comments, status)
+        created_on, created_by, incident_type, location_lat, location_long, images,
+        videos, comments, status)
         self.cursor.execute(insert_incident)
 
     def select_one_user(self, table_column, input_data):
@@ -109,4 +108,10 @@ class DatabaseConnection:
             record_type = '{}'".format( incident_id, record_type)
         self.cursor.execute(query_incident)
         return self.cursor.fetchone()
+
+
+    def delete_incident(self, record_type, incident_id):
+        query = "DELETE FROM records_table WHERE record_type = '{}' AND incident_id = '{}'"\
+            .format(record_type, incident_id)
+        return self.cursor.execute(query)
 
