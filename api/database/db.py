@@ -115,3 +115,26 @@ class DatabaseConnection:
             .format(record_type, incident_id)
         return self.cursor.execute(query)
 
+
+    def update_location(self, record_type, incident_id, lat_input, long_input):
+        query = "UPDATE records_table SET incident_location[1] = '{}', incident_location[2] = '{}'\
+             WHERE record_type = '{}' AND \
+            incident_id = '{}'".format(lat_input, long_input, record_type,\
+            incident_id)
+        return self.cursor.execute(query)
+
+    def update_incident_data(self, record_type, field_to_update, incident_id,
+        input_data):
+        query = "UPDATE records_table SET {} = '{}' WHERE record_type = '{}' AND\
+            incident_id = '{}'".format(field_to_update, input_data, record_type,
+            incident_id)
+        return self.cursor.execute(query)
+
+
+    def drop_tables(self):
+        commands = ("""DROP TABLE users""",
+                   """DROP TABLE records_table"""
+                   )
+        for command in commands:
+            self.cursor.execute(command)
+
