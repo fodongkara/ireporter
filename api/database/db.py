@@ -123,6 +123,7 @@ class DatabaseConnection:
             incident_id)
         return self.cursor.execute(query)
 
+
     def update_incident_data(self, record_type, field_to_update, incident_id,
         input_data):
         query = "UPDATE records_table SET {} = '{}' WHERE record_type = '{}' AND\
