@@ -1,9 +1,10 @@
 import jwt
+import os 
 from functools import wraps
 from datetime import datetime, timedelta
 from flask import request, jsonify
 
-SECRET_KEY = "fdfdwdcvb"
+SECRET_KEY = os.environ["SECRET_KEY"]
 
 
 def generate_token(user_id, is_admin):
