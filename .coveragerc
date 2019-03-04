@@ -1,0 +1,15 @@
+[report]
+omit =
+    */python?.?/*
+    */site-packages/nose/*
+    */__pycache__/*
+    *.pyc
+    */venv/*
+    */home/travis/virtualenv/*
+    */usr/lib/python3/*
+    */__init__.py
+    */api/database/db.py
+    tests/*
+    */app.py
+
+show_missing = True
