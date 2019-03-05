@@ -42,7 +42,7 @@ class UserValidation:
     @staticmethod
     def validate_user_password(password):
         """method validates user's password """
-        return isinstance(password, str) and len(password) >= 8 and re.search(r'[a-zA-Z]', password) and re.search(r'[0-9]', password)
+        return isinstance(password, str) and len(password) >=8
 
     @staticmethod
     def validate_user_email(email):

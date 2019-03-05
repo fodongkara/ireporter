@@ -16,15 +16,15 @@ class UserController:
     def signup_user(self):
         """Method for user sign up"""
         data = request.get_json()
-        first_name = data.get('firstname')
-        last_name = data.get('lastname')
-        other_names = data.get('othernames')
-        user_email = data.get('email')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        other_names = data.get('other_names')
+        user_email = data.get('user_email')
         phone_number = data.get('phone_number')
-        user_name = data.get('username')
-        Password = data.get('password')
+        user_name = data.get('user_name')
+        Password = data.get('Password')
         registered = datetime.now()
-        admin = data.get("is_admin")
+        admin = data.get("admin")
         if not first_name or not last_name or not\
                 other_names or not user_email or not phone_number or not \
                 user_name or not Password or not admin:
@@ -77,8 +77,11 @@ class UserController:
                 "status": 400
             }), 400
         user = db_conn.login_user(login_email)
+        print(user)
         if check_password_hash(user["password"], login_password):
-            access_token = generate_token(1)
+            user_id = user["userid"]
+            admin = user["is_admin"]
+            access_token = generate_token(user_id,admin)
             return jsonify({'access-token': access_token,   "Message": "User successfully logged in"}), 201
         return jsonify({
             "Error": "Invalid credentials"

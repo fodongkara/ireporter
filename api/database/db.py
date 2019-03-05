@@ -59,7 +59,7 @@ class DatabaseConnection:
             """
             CREATE TABLE IF NOT EXISTS records_table(
                 incident_id SERIAL PRIMARY KEY,
-                createdOn TEXT NOT NULL,
+                createdOn TIMESTAMPTZ DEFAULT NOW() NOT NULL,
                 createdBy VARCHAR(50) NOT NULL,
                 record_type VARCHAR(50) NOT NULL,
                 incident_location TEXT NOT NULL,
